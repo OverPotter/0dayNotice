@@ -2,42 +2,43 @@ import sqlite3
 from config import DB_PATH
 
 
-# todo annotations
 class DataBaseClient:
-    # todo repeat class methods
     def __init__(self):
         self.conn = sqlite3.connect(DB_PATH)
         self.cursor = self.conn.cursor()
+        self.__create_table()
 
-    def create_table(self) -> None:
+    def __create_table(self) -> None:
         self.cursor.execute("""
-        CREATE TABLE IF NOT EXISTS exploits_table (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        release_date VARCHAR(10),
-        description VARCHAR,
-        description_link VARCHAR,
-        platform VARCHAR(25),
-        risk VARCHAR(25),
-        price VARCHAR(15)
+        CREATE TABLE IF NOT EXISTS ExploitsTable (
+        id INTEGER NOT NULL UNIQUE PRIMARY KEY AUTOINCREMENT,
+        release_date VARCHAR(10) NOT NULL,
+        description TEXT NOT NULL UNIQUE,
+        description_link VARCHAR NOT NULL,
+        platform VARCHAR(25) NOT NULL,
+        risk VARCHAR(25) NOT NULL,
+        price VARCHAR(15) NOT NULL
         );
         """)
 
-    # def _get_courses(self, bank_name: str) -> tuple:
-    #     result = self.cursor.execute(
-    #         "SELECT `buyUSD`, `saleUSD`, `buyEUR`, `saleEUR`, `buyRUB`, `saleRUB`"
-    #         "FROM `MoneyCourse`"
-    #         "WHERE `Bank` = (?)",
-    #         (bank_name,))
-    #     return result.fetchall()[0]
+    def _get_release_date(self) -> list:
+        result = self.cursor.execute("""
+        SELECT `release_date` from ExploitsTable
+        """)
+        return result.fetchall()
 
-    def append_exploit(
+    def _get_exploit_info(self, date: str) -> list:
+        result = self.cursor.execute("""
+        SELECT * from ExploitsTable WHERE `release_date` = (?)
+                """, (date,))
+        return result.fetchall()
+
+    def _append_exploit(
             self, date: str, description: str, description_link: str, platform: str, risk: str, price: str
     ) -> None:
-        # print(date, description, description_link, platform, risk, price)
         self.cursor.execute("""
-        INSERT INTO exploits_table
+        INSERT OR IGNORE INTO ExploitsTable
         (`release_date`, `description`, `description_link`, `platform`, `risk`, `price`)
-        VALUES((?), (?), (?), (?), (?), (?)
-        );
+        VALUES((?), (?), (?), (?), (?), (?));
         """, (date, description, description_link, platform, risk, price,))
         return self.conn.commit()

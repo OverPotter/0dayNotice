@@ -17,7 +17,7 @@ class DataHandler(DataBaseClient):
             self.__parse_and_formatting_platform(table)
             self.__parse_and_formatting_risk(table)
             self.__parse_and_formatting_price(table)
-            self.append_exploit(**self.__exploit_dict)
+            self._append_exploit(**self.__exploit_dict)
 
     def __parse_and_formatting_date(self, table: bs4.element.Tag) -> None:
         exploit_date = re.findall(r'\d\d-\d\d-\d\d\d\d', str(table))
