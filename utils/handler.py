@@ -36,7 +36,7 @@ class DataHandler(DataBaseClient):
             self.__exploit_dict.update(description=description, description_link=link)
         else:
             self.__exploit_dict.update(description="Description not found",
-                                              description_link="Description link not found")
+                                       description_link="Description link not found")
 
     def __parse_and_formatting_platform(self, table: bs4.element.Tag) -> None:
         exploit_platform = re.findall(r'platforms.*</a>', str(table))
