@@ -8,7 +8,7 @@ class ExploitParser(DataHandler):
     def __init__(self):
         super().__init__()
         self.__session = requests.session()
-        self.__counter = 0
+        self.__counter: int = 0
         self._page_content = None
 
     def __get_tables(self):
@@ -21,7 +21,7 @@ class ExploitParser(DataHandler):
             self.__counter += 1
             self.__get_tables()
             if self.__counter > 5:
-                # todo return
+                # todo return mess to notice
                 print("Network Error")
 
     def run(self):
