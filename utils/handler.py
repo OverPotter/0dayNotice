@@ -9,7 +9,7 @@ class DataHandler(DataBaseClient):
         super().__init__()
         self.__exploit_dict: dict = {}
 
-    def _formatting_tables(self, page_content: bs4.BeautifulSoup) -> None:
+    def formatting_tables(self, page_content: bs4.BeautifulSoup) -> None:
         exploit_tables_html = page_content.find_all(class_='ExploitTableContent')
         for table in exploit_tables_html:
             self.__parse_and_formatting_date(table)
@@ -17,7 +17,7 @@ class DataHandler(DataBaseClient):
             self.__parse_and_formatting_platform(table)
             self.__parse_and_formatting_risk(table)
             self.__parse_and_formatting_price(table)
-            self._append_exploit(**self.__exploit_dict)
+            self.append_exploit(**self.__exploit_dict)
 
     def __parse_and_formatting_date(self, table: bs4.element.Tag) -> None:
         exploit_date = re.findall(r'\d\d-\d\d-\d\d\d\d', str(table))

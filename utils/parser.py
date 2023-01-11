@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from config import URL
 from utils.handler import DataHandler
+from utils.notice import Notification
 
 
 class ExploitParser(DataHandler):
@@ -11,7 +12,7 @@ class ExploitParser(DataHandler):
         self.__counter: int = 0
         self._page_content = None
 
-    def __get_tables(self):
+    def __get_tables(self) -> None:
         self.__session.post(URL, data={"agree": "Yes%2C+I+agree"})
         self.__session.get(f"{URL}/back")
         page_response = self.__session.get(URL)
@@ -21,9 +22,9 @@ class ExploitParser(DataHandler):
             self.__counter += 1
             self.__get_tables()
             if self.__counter > 5:
-                # todo return mess to notice
-                print("Network Error")
+                Notification().call_notification(text="Network TimeOut error")
+                raise Exception('Network TimeOut error')
 
-    def run(self):
+    def create_and_fill_database(self) -> None:
         self.__get_tables()
-        self._formatting_tables(self._page_content)
+        self.formatting_tables(self._page_content)

@@ -6,7 +6,6 @@ class DataBaseClient:
     def __init__(self):
         self.conn = sqlite3.connect(DB_PATH)
         self.cursor = self.conn.cursor()
-        self.__create_table()
 
     def __create_table(self) -> None:
         self.cursor.execute("""
@@ -21,21 +20,22 @@ class DataBaseClient:
         );
         """)
 
-    def _get_release_date(self) -> list:
+    def get_release_date(self) -> list:
         result = self.cursor.execute("""
-        SELECT `release_date` from ExploitsTable
+        SELECT `id`, `release_date` from ExploitsTable
         """)
         return result.fetchall()
 
-    def _get_exploit_info(self, date: str) -> list:
+    def get_exploit_info(self, exploit_id: str, date: str) -> list:
         result = self.cursor.execute("""
-        SELECT * from ExploitsTable WHERE `release_date` = (?)
-                """, (date,))
+        SELECT * from ExploitsTable WHERE `id` = (?) AND `release_date` = (?)
+                """, (exploit_id, date,))
         return result.fetchall()
 
-    def _append_exploit(
+    def append_exploit(
             self, date: str, description: str, description_link: str, platform: str, risk: str, price: str
     ) -> None:
+        self.__create_table()
         self.cursor.execute("""
         INSERT OR IGNORE INTO ExploitsTable
         (`release_date`, `description`, `description_link`, `platform`, `risk`, `price`)
