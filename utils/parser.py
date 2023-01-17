@@ -20,10 +20,10 @@ class ExploitParser(DataHandler):
             self._page_content = BeautifulSoup(page_response.content, "html.parser")
         else:
             self.__counter += 1
-            self.__get_tables()
             if self.__counter > 5:
                 Notification().call_notification(text="Network TimeOut error")
                 raise Exception('Network TimeOut error')
+            self.__get_tables()
 
     def create_and_fill_database(self) -> None:
         self.__get_tables()

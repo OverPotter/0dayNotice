@@ -10,5 +10,4 @@ if __name__ == '__main__':
             utils.Notification().launch_notice()
         else:
             utils.Notification().call_notification(text="Registry create_autorun() error")
-            raise Exception('Registry create_autorun() error')
         time.sleep(TIMEOUT)
